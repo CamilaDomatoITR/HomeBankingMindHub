@@ -4,6 +4,7 @@ using HomeBankingMindHub.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeBankingMindHub.Migrations
 {
     [DbContext(typeof(HomeBankingContext))]
-    partial class HomeBankingContextModelSnapshot : ModelSnapshot
+    [Migration("20240221123623_addLoanEntiity")]
+    partial class addLoanEntiity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,21 @@ namespace HomeBankingMindHub.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("ClientLoanLoan", b =>
+                {
+                    b.Property<long>("ClientLoanId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("LoanId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("ClientLoanId", "LoanId");
+
+                    b.HasIndex("LoanId");
+
+                    b.ToTable("ClientLoanLoan");
+                });
 
             modelBuilder.Entity("HomeBankingMindHub.Models.Account", b =>
                 {
@@ -98,8 +116,6 @@ namespace HomeBankingMindHub.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.HasIndex("LoanId");
-
                     b.ToTable("ClientLoans");
                 });
 
@@ -155,6 +171,21 @@ namespace HomeBankingMindHub.Migrations
                     b.ToTable("Transaction");
                 });
 
+            modelBuilder.Entity("ClientLoanLoan", b =>
+                {
+                    b.HasOne("HomeBankingMindHub.Models.ClientLoan", null)
+                        .WithMany()
+                        .HasForeignKey("ClientLoanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HomeBankingMindHub.Models.Loan", null)
+                        .WithMany()
+                        .HasForeignKey("LoanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("HomeBankingMindHub.Models.Account", b =>
                 {
                     b.HasOne("HomeBankingMindHub.Models.Client", "Client")
@@ -168,21 +199,11 @@ namespace HomeBankingMindHub.Migrations
 
             modelBuilder.Entity("HomeBankingMindHub.Models.ClientLoan", b =>
                 {
-                    b.HasOne("HomeBankingMindHub.Models.Client", "Client")
+                    b.HasOne("HomeBankingMindHub.Models.Client", null)
                         .WithMany("ClientLoan")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("HomeBankingMindHub.Models.Loan", "Loan")
-                        .WithMany("ClientLoan")
-                        .HasForeignKey("LoanId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Client");
-
-                    b.Navigation("Loan");
                 });
 
             modelBuilder.Entity("HomeBankingMindHub.Models.Transaction", b =>
@@ -205,11 +226,6 @@ namespace HomeBankingMindHub.Migrations
                 {
                     b.Navigation("Accounts");
 
-                    b.Navigation("ClientLoan");
-                });
-
-            modelBuilder.Entity("HomeBankingMindHub.Models.Loan", b =>
-                {
                     b.Navigation("ClientLoan");
                 });
 #pragma warning restore 612, 618
