@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HomeBankingMindHub.Models
+namespace HomeBankingMindHub.Models.DTOS
 
 {
     public class CardDTO

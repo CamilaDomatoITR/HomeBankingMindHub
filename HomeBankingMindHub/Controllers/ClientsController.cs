@@ -1,5 +1,7 @@
 ﻿using HomeBankingMindHub.Models;
+using HomeBankingMindHub.Models.DTOS;
 using HomeBankingMindHub.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,18 +12,12 @@ namespace HomeBankingMindHub.Controllers
     public class ClientsController : ControllerBase
 
     {
-
         private IClientRepository _clientRepository;
-
         public ClientsController(IClientRepository clientRepository)
 
         {
-
-            _clientRepository = clientRepository;
-
+           _clientRepository = clientRepository;
         }
-
-
 
         [HttpGet]
 
@@ -32,19 +28,13 @@ namespace HomeBankingMindHub.Controllers
             try
 
             {
-
                 var clients = _clientRepository.GetAllClients();
 
-
-
                 var clientsDTO = new List<ClientDTO>();
-
-
 
                 foreach (Client client in clients)
 
                 {
-
                     var newClientDTO = new ClientDTO
 
                     {
@@ -92,30 +82,23 @@ namespace HomeBankingMindHub.Controllers
 
                     };
 
-
-
                     clientsDTO.Add(newClientDTO);
 
                 }
 
-
                 return Ok(clientsDTO);
-
             }
 
             catch (Exception ex)
 
             {
-
                 return StatusCode(500, ex.Message);
-
             }
 
         }
 
-
-
         [HttpGet("{id}")]
+        [Authorize(Policy = "ClientOnly")]
 
         public IActionResult Get(long id)
 
@@ -124,18 +107,13 @@ namespace HomeBankingMindHub.Controllers
             try
 
             {
-
                 var client = _clientRepository.FindById(id);
 
                 if (client == null)
 
                 {
-
                     return Forbid();
-
                 }
-
-
 
                 var clientDTO = new ClientDTO
 
@@ -191,9 +169,7 @@ namespace HomeBankingMindHub.Controllers
             catch (Exception ex)
 
             {
-
                 return StatusCode(500, ex.Message);
-
             }
 
         }
@@ -262,15 +238,27 @@ namespace HomeBankingMindHub.Controllers
             try
             {
                 //validamos datos antes
-                if (String.IsNullOrEmpty(client.Email) || String.IsNullOrEmpty(client.Password) || String.IsNullOrEmpty(client.FirstName) || String.IsNullOrEmpty(client.LastName))
-                    return StatusCode(403, "datos inválidos");
+                if (String.IsNullOrEmpty(client.Email)){
+                    return StatusCode(403, "Email incorrecto");
+                } 
+                if (String.IsNullOrEmpty(client.Password)) {
+                    return StatusCode(403, "contraseña incorrecta");
+                }
+                if (String.IsNullOrEmpty(client.FirstName))
+                {
+                    return StatusCode(403, "El campo nombre es incorrecto");
+                }
+                if (String.IsNullOrEmpty(client.LastName))
+                {
+                    return StatusCode(403, "El campo apellido es incorrecto");
+                }
 
                 //buscamos si ya existe el usuario
-                Client user = _clientRepository.FindByEmail(client.Email);
+                //Client user = _clientRepository.FindByEmail(client.Email);
 
-                if (user != null)
+                if (_clientRepository.ExistsByEmail(client.Email))
                 {
-                    return StatusCode(403, "Email está en uso");
+                    return StatusCode(403, "El Email está en uso");
                 }
 
                 Client newClient = new Client
@@ -290,7 +278,6 @@ namespace HomeBankingMindHub.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-
 
 
     }

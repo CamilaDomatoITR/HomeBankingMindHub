@@ -10,6 +10,7 @@
         public int Cvv { get; set; }
         public DateTime FromDate { get; set; }
         public DateTime ThruDate { get; set; }
+        public Client Client { get; set; }
         public long ClientId { get; set; }
     }
 }

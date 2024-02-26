@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HomeBankingMindHub.Models.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace HomeBankingMindHub.Models
 {
@@ -15,7 +16,7 @@ namespace HomeBankingMindHub.Models
                         Password="123456"},
                     new Client { Email = "cdomato@gmail.com",
                         FirstName="Camila", LastName="Domato",
-                        Password="112233"},
+                        Password="112233" },
                     new Client { Email = "dbenitez@gmail.com",
                         FirstName="Damian", LastName="Benitez",
                         Password="7891011"}

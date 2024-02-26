@@ -44,7 +44,10 @@ namespace HomeBankingMindHub.Repositories
             Create(client);
             SaveChanges();
         }
-
-
+        //consultar si existe el user
+        public bool ExistsByEmail(string email)
+        {
+            return FindByCondition(client => client.Email == email).Any();
+        }
     }
 }

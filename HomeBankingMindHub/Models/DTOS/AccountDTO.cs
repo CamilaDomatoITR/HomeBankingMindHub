@@ -1,8 +1,6 @@
-﻿using HomeBankingMindHub.Models;
+﻿using System;
 
-using System;
-
-namespace HomeBankingMindHub.Models
+namespace HomeBankingMindHub.Models.DTOS
 {
     public class AccountDTO
     {
