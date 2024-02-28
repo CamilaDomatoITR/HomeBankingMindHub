@@ -14,7 +14,7 @@ namespace HomeBankingMindHub.Models
                     new Client { Email = "vcoronado@gmail.com",
                         FirstName="Victor", LastName="Coronado",
                         Password="123456"},
-                    new Client { Email = "cdomato@gmail.com",
+                    new Client { Email = "",
                         FirstName="Camila", LastName="Domato",
                         Password="112233" },
                     new Client { Email = "dbenitez@gmail.com",
@@ -26,7 +26,6 @@ namespace HomeBankingMindHub.Models
 
                 //guardamos
                 context.SaveChanges();
-
             }
 
             if (!context.Account.Any())

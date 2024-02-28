@@ -34,5 +34,17 @@ namespace HomeBankingMindHub.Repositories
             Create(account);
             SaveChanges();
         }
+        public IEnumerable<Account> GetAccountsByClient(long clientId)
+
+        {
+
+            return FindByCondition(account => account.ClientId == clientId)
+
+            .Include(account => account.Transactions)
+
+            .ToList();
+
+        }
+
     }
 }
