@@ -8,7 +8,7 @@ namespace HomeBankingMindHub.Repositories
         public ClientRepository(HomeBankingContext repositoryContext) : base(repositoryContext)
         {
         }
-
+        //buscar cliente por id
         public Client FindById(long id)
         {
             return FindByCondition(client => client.Id == id)
@@ -18,7 +18,7 @@ namespace HomeBankingMindHub.Repositories
                 .Include(client => client.Card)
                 .FirstOrDefault();
         }
-
+        //buscar todos los clientes
         public IEnumerable<Client> GetAllClients()
         {
             return FindAll()
@@ -28,7 +28,7 @@ namespace HomeBankingMindHub.Repositories
                 .Include(client => client.Card)
                 .ToList();
         }
-
+        //buscar clientes por email
         public Client FindByEmail(string email)
         {
             return FindByCondition(client => client.Email.ToUpper() == email.ToUpper())
@@ -38,13 +38,13 @@ namespace HomeBankingMindHub.Repositories
             .Include(client => client.Card)
             .FirstOrDefault();
         }
-
+        //crear y/o guardar cliente
         public void Save(Client client)
         {
             Create(client);
             SaveChanges();
         }
-        //consultar si existe el user
+        //consultar si existe el user por email
         public bool ExistsByEmail(string email)
         {
             return FindByCondition(client => client.Email == email).Any();

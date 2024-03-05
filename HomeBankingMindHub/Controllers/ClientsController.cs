@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using HomeBankingMindHub.Models.Utils;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace HomeBankingMindHub.Controllers
 {
@@ -27,7 +30,7 @@ namespace HomeBankingMindHub.Controllers
         }
 
         [HttpGet]
-
+        [Authorize(Policy = "AdminOnly")]
         public IActionResult Get()
 
         {
@@ -101,7 +104,7 @@ namespace HomeBankingMindHub.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Policy = "ClientOnly")]
+        [Authorize(Policy = "AdminOnly")]
 
         public IActionResult Get(long id)
 
@@ -118,23 +121,15 @@ namespace HomeBankingMindHub.Controllers
                 var clientDTO = new ClientDTO
                 {
                     Id = client.Id,
-
                     Email = client.Email,
-
                     FirstName = client.FirstName,
-
                     LastName = client.LastName,
-
                     Accounts = client.Accounts.Select(ac => new AccountDTO
 
                     {
-
                         Id = ac.Id,
-
                         Balance = ac.Balance,
-
                         CreationDate = ac.CreationDate,
-
                         Number = ac.Number
 
                     }).ToList(),
@@ -230,6 +225,64 @@ namespace HomeBankingMindHub.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpGet("current/accounts")]
+        [Authorize(Policy = "ClientOnly")]
+        public IActionResult GetCurrentClientAccounts()
+        {
+            try
+            {
+                string email = User.FindFirst("Client")?.Value;
+                if (string.IsNullOrEmpty(email))
+                {
+                    return Forbid();
+                }
+
+                Client client = _clientRepository.FindByEmail(email);
+                if (client == null)
+                {
+                    return Forbid();
+                }
+
+                var clientAccounts = _accountRepository.GetAccountsByClient(client.Id);
+
+                return Ok(clientAccounts);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("current/cards")]
+        [Authorize(Policy = "ClientOnly")]
+        public IActionResult GetCurrentClientCards()
+        {
+            try
+            {
+                string email = User.FindFirst("Client")?.Value;
+                if (string.IsNullOrEmpty(email))
+                {
+                    return Forbid();
+                }
+
+                Client client = _clientRepository.FindByEmail(email);
+                if (client == null)
+                {
+                    return Forbid();
+                }
+
+                var clientCards = _cardRepository.GetCardsByClient((int)client.Id);
+
+                return Ok(clientCards);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
         //crea user
         [HttpPost]
         public IActionResult Post([FromBody] Client client)
@@ -259,6 +312,7 @@ namespace HomeBankingMindHub.Controllers
                 {
                     return StatusCode(403, "El Email está en uso");
                 }
+                // Crear un nuevo cliente
 
                 Client newClient = new Client
                 {
@@ -267,9 +321,10 @@ namespace HomeBankingMindHub.Controllers
                     FirstName = client.FirstName,
                     LastName = client.LastName,
                 };
-
+                //guardar el nuevo cliente
                 _clientRepository.Save(newClient);
                 return Created("", newClient);
+
 
             }
             catch (Exception ex)

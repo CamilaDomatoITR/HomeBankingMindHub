@@ -27,7 +27,10 @@ namespace HomeBankingMindHub.Repositories
         {
             return _context.Card.FirstOrDefault(c => c.Id == id);
         }
+        public IEnumerable<Card> GetCardsByClient(int clientId)
+        {
+            return _context.Card.Where(c => c.ClientId == clientId).ToList();
+        }
 
-       
     }
 }
