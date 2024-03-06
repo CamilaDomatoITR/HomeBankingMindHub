@@ -13,9 +13,9 @@ namespace HomeBankingMindHub.Repositories
             loans = new List<LoanDTO>
             {
                 //agrego los 3 préstamos
-                new LoanDTO { Id = 1, Type = "Hipotecario", MaxAmount = 500000, Payments = new List<int> { 12, 24, 36, 48, 60 } },
-                new LoanDTO { Id = 2, Type = "Personal", MaxAmount = 100000, Payments = new List<int> { 6, 12, 24 } },
-                new LoanDTO { Id = 3, Type = "Automotriz", MaxAmount = 300000, Payments = new List<int> { 6, 12, 24, 36 } }
+                new LoanDTO { Id = 1, Type = "Hipotecario", MaxAmount = 500000, Payments = "12,24,36,48,60" },
+                new LoanDTO { Id = 2, Type = "Personal", MaxAmount = 100000, Payments = "6,12,24" },
+                new LoanDTO { Id = 3, Type = "Automotriz", MaxAmount = 300000, Payments = "6,12,24,36" }
             };
         }
 
