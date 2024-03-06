@@ -39,12 +39,15 @@ public class LoansController : ControllerBase
     {
         try
         {
+            // Obtener información del cliente autenticado
+            
+
             string email = User.FindFirst("Client") != null ? User.FindFirst("Client").Value : string.Empty;
             if (email == string.Empty)
             {
                 return Forbid();
             }
-
+            // Buscar el cliente por su correo electrónico
             Client client = _clientRepository.FindByEmail(email);
 
             if (client == null)
@@ -94,7 +97,7 @@ public class LoansController : ControllerBase
             };
             _transactionRepository.Save(transaction);
 
-            // Actualiza el balance de la cuenta
+            // Actualiza el balance de la cuenta de destino
             account.Balance += loanAppDto.Amount;
             _accountRepository.Save(account);
 

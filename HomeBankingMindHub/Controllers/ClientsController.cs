@@ -38,7 +38,6 @@ namespace HomeBankingMindHub.Controllers
 
             {
                 var clients = _clientRepository.GetAllClients();
-
                 var clientsDTO = new List<ClientDTO>();
 
                 foreach (Client client in clients)
@@ -48,22 +47,16 @@ namespace HomeBankingMindHub.Controllers
 
                     {
                         Id = client.Id,
-
                         Email = client.Email,
-
                         FirstName = client.FirstName,
-
                         LastName = client.LastName,
 
                         Accounts = client.Accounts.Select(ac => new AccountDTO
 
                         {
                             Id = ac.Id,
-
                             Balance = ac.Balance,
-
                             CreationDate = ac.CreationDate,
-
                             Number = ac.Number
 
                         }).ToList(),
@@ -356,6 +349,8 @@ namespace HomeBankingMindHub.Controllers
 
                 // Verificar si el cliente ya tiene 3 cuentas
                 var clientAccounts = _accountRepository.GetAccountsByClient(client.Id);
+               
+                
                 if (clientAccounts.Count() >= 3)
                 {
                     return StatusCode(403, "El cliente ya tiene 3 cuentas registradas");
@@ -363,7 +358,6 @@ namespace HomeBankingMindHub.Controllers
 
                 // Generar número de cuenta aleatorio utilizando RandomGenerator
                 string accountNumber = RandomGenerator.GenerateAccountNumber();
-
 
                 // Crear una nueva cuenta con saldo inicial 0
                 Account newAccount = new Account
@@ -428,6 +422,7 @@ namespace HomeBankingMindHub.Controllers
                 }
 
                 // Generar número de tarjeta aleatorio
+               
                 string cardNumber = RandomGenerator.GenerateCardNumber();
 
                 // Otros datos de la tarjeta

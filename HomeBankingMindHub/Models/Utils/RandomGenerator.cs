@@ -27,9 +27,8 @@ namespace HomeBankingMindHub.Models.Utils
         // Método para generar números de cuenta únicos
         public static string GenerateAccountNumber()
         {
-            // Puedes definir un formato específico para los números de cuenta
-            // Por ejemplo, un formato de 10 dígitos
-            string format = "XXXX-XXXX-XX";
+          
+            string format = "VIN" + "XXXXX";
 
             // Genera números aleatorios hasta que se encuentre uno único
             string accountNumber;
